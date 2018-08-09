@@ -12,7 +12,7 @@ gem 'puma', '~> 3.11'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 4.0'
+gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
@@ -26,12 +26,15 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'dotenv-rails'
+  gem 'rspec-rails', '~> 3.8'
+  gem 'factory_bot_rails', '~> 4.10'
+  gem 'faker', '~> 1.9', '>= 1.9.1'
 end
 
 group :development do
@@ -39,6 +42,8 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  # When mail is sent from your application, Letter Opener will open a preview in the browser instead of sending
+  gem 'letter_opener', '~> 1.6'
 end
 
 
@@ -46,3 +51,9 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'sidekiq'
+
+# XSS/CSRF safe JWT auth designed for SPA
+gem 'jwt_sessions', '~> 2.2'
+
+# Documentation
+gem 'swagger-blocks'
