@@ -13,13 +13,13 @@ Rails.application.routes.draw do
           patch ':token', action: :update
         end
       end
-      # Admin Users
+      # Admin
       post 'signup',  to: 'signup#create'
       namespace :admin do
-        resources :users, only: [:show, :update, :destroy]
-        scope '/users' do
-          post '/', to: 'users#index'
-        end
+        # Users
+        resources :users, only: [:index, :show, :update, :destroy]
+        # Items
+        resources :items, only: [:index, :show, :update, :destroy, :create]
       end
       # Documentation
       resources :apidocs, only: [:index]

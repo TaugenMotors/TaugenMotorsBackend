@@ -1,25 +1,24 @@
-class Api::V1::Admin::UsersController < ApplicationController
+class Api::V1::Admin::ItemsController < ApplicationController
   before_action :authorize_access_request!
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_item, only: [:show, :update, :destroy]
   VIEW_ROLES = %w[admin owner].freeze
   EDIT_ROLES = %w[admin].freeze
 
   # Swagger
-  swagger_path '/admin/users' do
+  swagger_path '/admin/items' do
     operation :get do
-      key :description, 'get users'
-      key :operationId, 'getUsers'
+      key :description, 'get items'
+      key :operationId, 'getItems'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'users' ]
+      key :tags, [ 'items' ]
       parameter :csrfToken
       parameter :page
       parameter :perPage
-      parameter :role
       parameter :search
       response 200 do
-        key :description, 'Users'
+        key :description, 'Items'
         schema do
-          key :'$ref', :Users
+          key :'$ref', :Items
         end
       end
       response 422 do
@@ -30,48 +29,59 @@ class Api::V1::Admin::UsersController < ApplicationController
       end
     end
   end
-  # GET /admin/users
+  # GET /admin/items
   def index
     page = ( pagination_params[:page] || 1 ).to_i
     perPage = ( pagination_params[:perPage] || 10 ).to_i
-    queryRole = pagination_params[:role] || nil
     querySearch = pagination_params[:search] || nil
-    # Seach all Users
-    @users = User.all.order(:id)
-    # Filter by role
-    if queryRole
-      @users = @users.where(role: queryRole)
-    end
+    # Seach all Items
+    @items = Item.all.order(:id)
     # Seah string in name
     if querySearch
-      @users = @users.where('name ~* :pat', :pat => querySearch)
+      @items = @items.where('name ~* :pat', :pat => querySearch)
     end
     # Define total pages with this perPage
-    totalItems = @users.length
+    totalItems = @items.length
     if totalItems > 0
       totalPages = ( totalItems / perPage.to_f ).ceil
       page = totalPages >= page ? page : totalPages
       offset = ( page - 1 ) * perPage
-      @users = @users.limit(perPage).offset(offset)
+      @items = @items.limit(perPage).offset(offset)
     end
 
     response.set_header( 'TOTAL-PAGES', totalPages )
-    render json: @users
+    render json: @items
+  end
+
+  # POST /admin/items
+  def create
+    begin
+      item = Item.new(create_item_params)
+      if item.save
+        render json: item
+      else
+        render json: { error: item.errors.full_messages.join(' ') },
+               status: :unprocessable_entity
+      end
+    rescue => e
+      render json: { error: e },
+             status: :unprocessable_entity
+    end
   end
 
   # Swagger
-  swagger_path '/admin/users/{id}' do
-    parameter :pathUserId
+  swagger_path '/admin/items/{id}' do
+    parameter :pathItemId
     operation :get do
-      key :description, 'show user'
-      key :operationId, 'showUser'
+      key :description, 'show item'
+      key :operationId, 'showItem'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'users' ]
+      key :tags, [ 'items' ]
       parameter :csrfToken
       response 200 do
-        key :description, 'Users'
+        key :description, 'Items'
         schema do
-          key :'$ref', :User
+          key :'$ref', :Item
         end
       end
       response 404 do
@@ -82,33 +92,33 @@ class Api::V1::Admin::UsersController < ApplicationController
       end
     end
   end
-  # GET /admin/users/:id
+  # GET /admin/items/:id
   def show
-    render json: @user
+    render json: @item
   end
 
-  # Swagger
-  swagger_path '/admin/users/{id}' do
-    parameter :pathUserId
+  Swagger
+  swagger_path '/admin/items/{id}' do
+    parameter :pathItemId
     operation :patch do
-      key :description, 'Update user role'
-      key :operationId, 'updateUser'
+      key :description, 'Update item role'
+      key :operationId, 'updateItem'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'users' ]
+      key :tags, [ 'items' ]
       parameter :csrfToken
       parameter do
-        key :name, :updateUser
+        key :name, :updateItem
         key :in, :body
-        key :description, 'User to update'
+        key :description, 'Item to update'
         key :required, true
         schema do
-          key :'$ref', :UpdateUser
+          key :'$ref', :UpdateItem
         end
       end
       response 200 do
-        key :description, 'User to update'
+        key :description, 'Item to update'
         schema do
-          key :'$ref', :User
+          key :'$ref', :Item
         end
       end
       response 404 do
@@ -125,25 +135,20 @@ class Api::V1::Admin::UsersController < ApplicationController
       end
     end
   end
-  # PATHC /admin/users/:id
+  # PATHC /admin/items/:id
   def update
-    if current_user.id != @user.id
-      @user.update!(user_params)
-      JWTSessions::Session.new(namespace: "user_#{@user.id}").flush_namespaced_access_tokens
-      render json: @user
-    else
-      render json: { error: 'Admin cannot modify their own role' }, status: :bad_request
-    end
+    @item.update!(item_params)
+    render json: @item
   end
 
   # Swagger
-  swagger_path '/admin/users/{id}' do
-    parameter :pathUserId
+  swagger_path '/admin/items/{id}' do
+    parameter :pathItemId
     operation :delete do
-      key :description, 'Delete user'
-      key :operationId, 'deleteUser'
+      key :description, 'Delete item'
+      key :operationId, 'deleteItem'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'users' ]
+      key :tags, [ 'items' ]
       parameter :csrfToken
       response 200 do
         key :description, :ok
@@ -162,15 +167,10 @@ class Api::V1::Admin::UsersController < ApplicationController
       end
     end
   end
-  # DELETE /admin/users/:id
+  # DELETE /admin/items/:id
   def destroy
-    if current_user.id != @user.id
-      @user.destroy
-      JWTSessions::Session.new(namespace: "user_#{@user.id}").flush_namespaced_access_tokens
-      render json: :ok
-    else
-      render json: { error: 'The user can not delete himself' }, status: :bad_request
-    end
+    @item.destroy
+    render json: :ok
   end
 
   def token_claims
@@ -179,18 +179,22 @@ class Api::V1::Admin::UsersController < ApplicationController
       verify_aud: true
     }
   end
-  
+
   private
 
-  def allowed_aud
-    ( ['destroy', 'update'].include? action_name) ? EDIT_ROLES : VIEW_ROLES
+  def set_item
+    @item = Item.find(params[:id])
   end
 
-  def set_user
-    @user = User.find(params[:id])
+  def allowed_aud
+    ( ['destroy', 'update', 'create'].include? action_name) ? EDIT_ROLES : VIEW_ROLES
   end
-  
-  def user_params
-    params.require(:user).permit(:role)
+
+  def item_params
+    params.require(:item).permit(:name, :reference, :price, :tax, :description, :provider, :status)
+  end
+
+  def create_item_params
+    params.permit(:name, :reference, :price, :tax, :description, :provider, :status)
   end
 end

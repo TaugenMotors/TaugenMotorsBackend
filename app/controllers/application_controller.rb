@@ -33,4 +33,9 @@ class ApplicationController < ActionController::API
   def unprocessable_entity(exception)
     render json: { error: exception.record.errors.full_messages.join(' ') }, status: :unprocessable_entity
   end
+
+  # Shared between controllers
+  def pagination_params
+    params.permit(:page, :perPage, :role, :search)
+  end
 end

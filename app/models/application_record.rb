@@ -23,19 +23,4 @@ class ApplicationRecord < ActiveRecord::Base
       key :type, :string
     end
   end
-
-  swagger_schema :Pagination do
-    property :page do
-      key :type, :string
-    end
-    property :perPage do
-      key :type, :string
-    end
-    property :role do
-      key :type, :string
-    end
-    property :search do
-      key :type, :string
-    end
-  end
 end
