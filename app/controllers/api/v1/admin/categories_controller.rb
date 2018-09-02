@@ -1,24 +1,24 @@
-class Api::V1::Admin::ItemsController < ApplicationController
+class Api::V1::Admin::CategoriesController < ApplicationController
   before_action :authorize_access_request!
-  before_action :set_item, only: [:show, :update, :destroy]
+  before_action :set_category, only: [:show, :update, :destroy]
   VIEW_ROLES = %w[admin owner].freeze
   EDIT_ROLES = %w[admin].freeze
 
   # Swagger
-  swagger_path '/admin/items' do
+  swagger_path '/admin/categories' do
     operation :get do
-      key :description, 'get items'
-      key :operationId, 'getItems'
+      key :description, 'get categories'
+      key :operationId, 'getCategories'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'items' ]
+      key :tags, [ 'categories' ]
       parameter :csrfToken
       parameter :page
       parameter :perPage
       parameter :search
       response 200 do
-        key :description, 'Items'
+        key :description, 'Categories'
         schema do
-          key :'$ref', :Items
+          key :'$ref', :Categories
         end
       end
       response 422 do
@@ -29,50 +29,50 @@ class Api::V1::Admin::ItemsController < ApplicationController
       end
     end
   end
-  # GET /admin/items
+  # GET /admin/categories
   def index
     page = ( pagination_params[:page] || 1 ).to_i
     perPage = ( pagination_params[:perPage] || 10 ).to_i
     querySearch = pagination_params[:search] || nil
-    # Seach all Items
-    @items = Item.all.order(:id)
+    # Seach all categories
+    @categories = Category.all.order(:id)
     # Seah string in name
     if querySearch
-      @items = @items.where('name ~* :pat', :pat => querySearch)
+      @categories = @categories.where('name ~* :pat', :pat => querySearch)
     end
     # Define total pages with this perPage
-    totalItems = @items.length
+    totalItems = @categories.length
     if totalItems > 0
       totalPages = ( totalItems / perPage.to_f ).ceil
       page = totalPages >= page ? page : totalPages
       offset = ( page - 1 ) * perPage
-      @items = @items.limit(perPage).offset(offset)
+      @categories = @categories.limit(perPage).offset(offset)
     end
 
     response.set_header( 'TOTAL-PAGES', totalPages )
-    render json: @items
+    render json: @categories
   end
 
   # Swagger
-  swagger_path '/admin/items' do
+  swagger_path '/admin/categories' do
     operation :post do
-      key :description, 'Creates a new item. Duplicate references are not allowed'
-      key :operationId, 'addItem'
+      key :description, 'Creates a new category. Duplicate name are not allowed'
+      key :operationId, 'addCategory'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'items' ]
+      key :tags, [ 'categories' ]
       parameter do
-        key :name, :item
+        key :name, :category
         key :in, :body
-        key :description, 'Item to add'
+        key :description, 'Category to add'
         key :required, true
         schema do
-          key :'$ref', :CreateItem
+          key :'$ref', :CreateCategory
         end
       end
       response 200 do
-        key :description, 'Created Item'
+        key :description, 'Created Category'
         schema do
-          key :'$ref', :Item
+          key :'$ref', :Category
         end
       end
       response 422 do
@@ -83,14 +83,14 @@ class Api::V1::Admin::ItemsController < ApplicationController
       end
     end
   end
-  # POST /admin/items
+  # POST /admin/categories
   def create
     begin
-      item = Item.new(create_item_params)
-      if item.save
-        render json: item
+      category = Category.new(create_category_params)
+      if category.save
+        render json: category
       else
-        render json: { error: item.errors.full_messages.join(' ') },
+        render json: { error: category.errors.full_messages.join(' ') },
                status: :unprocessable_entity
       end
     rescue => e
@@ -100,18 +100,18 @@ class Api::V1::Admin::ItemsController < ApplicationController
   end
 
   # Swagger
-  swagger_path '/admin/items/{id}' do
-    parameter :pathItemId
+  swagger_path '/admin/categories/{id}' do
+    parameter :pathCategoryId
     operation :get do
-      key :description, 'show item'
-      key :operationId, 'showItem'
+      key :description, 'show category'
+      key :operationId, 'showCategory'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'items' ]
+      key :tags, [ 'categories' ]
       parameter :csrfToken
       response 200 do
-        key :description, 'Items'
+        key :description, 'Categorys'
         schema do
-          key :'$ref', :Item
+          key :'$ref', :Category
         end
       end
       response 404 do
@@ -122,33 +122,33 @@ class Api::V1::Admin::ItemsController < ApplicationController
       end
     end
   end
-  # GET /admin/items/:id
+  # GET /admin/categories/:id
   def show
-    render json: @item
+    render json: @category
   end
 
   # Swagger
-  swagger_path '/admin/items/{id}' do
-    parameter :pathItemId
+  swagger_path '/admin/categories/{id}' do
+    parameter :pathCategoryId
     operation :patch do
-      key :description, 'Update item'
-      key :operationId, 'updateItem'
+      key :description, 'Update category'
+      key :operationId, 'updateCategory'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'items' ]
+      key :tags, [ 'categories' ]
       parameter :csrfToken
       parameter do
-        key :name, :updateItem
+        key :name, :updateCategory
         key :in, :body
-        key :description, 'Item to update'
+        key :description, 'Category to update'
         key :required, true
         schema do
-          key :'$ref', :UpdateItem
+          key :'$ref', :UpdateCategory
         end
       end
       response 200 do
-        key :description, 'Item to update'
+        key :description, 'Category to update'
         schema do
-          key :'$ref', :Item
+          key :'$ref', :Category
         end
       end
       response 404 do
@@ -165,20 +165,20 @@ class Api::V1::Admin::ItemsController < ApplicationController
       end
     end
   end
-  # PATHC /admin/items/:id
+  # PATHC /admin/categories/:id
   def update
-    @item.update!(item_params)
-    render json: @item
+    @category.update!(category_params)
+    render json: @category
   end
 
   # Swagger
-  swagger_path '/admin/items/{id}' do
-    parameter :pathItemId
+  swagger_path '/admin/categories/{id}' do
+    parameter :pathCategoryId
     operation :delete do
-      key :description, 'Delete item'
-      key :operationId, 'deleteItem'
+      key :description, 'Delete category'
+      key :operationId, 'deleteCategory'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'items' ]
+      key :tags, [ 'categories' ]
       parameter :csrfToken
       response 200 do
         key :description, :ok
@@ -197,9 +197,9 @@ class Api::V1::Admin::ItemsController < ApplicationController
       end
     end
   end
-  # DELETE /admin/items/:id
+  # DELETE /admin/categories/:id
   def destroy
-    @item.destroy
+    @category.destroy
     render json: :ok
   end
 
@@ -212,19 +212,20 @@ class Api::V1::Admin::ItemsController < ApplicationController
 
   private
 
-  def set_item
-    @item = Item.find(params[:id])
+  def set_category
+    @category = Category.find(params[:id])
   end
 
   def allowed_aud
     ( ['destroy', 'update', 'create'].include? action_name) ? EDIT_ROLES : VIEW_ROLES
   end
 
-  def item_params
-    params.require(:item).permit(:name, :reference, :price, :tax, :description, :provider, :status)
+  def category_params
+    params.require(:category).permit(:name, :description)
   end
 
-  def create_item_params
-    params.permit(:name, :reference, :price, :tax, :description, :provider, :status)
+  def create_category_params
+    params.permit(:name, :description)
   end
 end
+

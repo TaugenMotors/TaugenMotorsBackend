@@ -20,6 +20,8 @@ Rails.application.routes.draw do
         resources :users, only: [:index, :show, :update, :destroy]
         # Items
         resources :items, only: [:index, :show, :update, :destroy, :create]
+        # Catogories
+        resources :categories, only: [:index, :show, :update, :destroy, :create]
       end
       # Documentation
       resources :apidocs, only: [:index]

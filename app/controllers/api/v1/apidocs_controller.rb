@@ -34,6 +34,13 @@ class Api::V1::ApidocsController < ApplicationController
       key :required, true
       key :type, :string
     end
+    parameter :pathCategoryId do
+      key :name, :id
+      key :in, :path
+      key :description, 'Category ID'
+      key :required, true
+      key :type, :string
+    end
     parameter :csrfToken do
       key :name, 'X-CSRF-TOKEN'
       key :in, :header
@@ -81,8 +88,10 @@ class Api::V1::ApidocsController < ApplicationController
     Api::V1::UsersController,
     Api::V1::Admin::UsersController,
     Api::V1::Admin::ItemsController,
-    Item,
+    Api::V1::Admin::CategoriesController,
     User,
+    Item,
+    Category,
     self,
   ].freeze
 
