@@ -4,7 +4,7 @@ class CreateItems < ActiveRecord::Migration[5.2]
       # Nombre del item (*)
       t.string :name, null: false
       # Referencia (*) único
-      t.string :reference
+      t.string :reference, null: false
       # Precio de venta (*) 
       t.decimal :price, null: false
       # Impuesto

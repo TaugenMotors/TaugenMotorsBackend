@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::Admin::ItemsController, type: :controller do
-  let!(:user) { create(:user) }
+
   let!(:item) { create(:item) }
+  let!(:user) { create(:user) }
   let!(:owner) { create(:user, role: :owner) }
   let!(:admin) { create(:user, role: :admin) }
 
@@ -55,10 +56,9 @@ RSpec.describe Api::V1::Admin::ItemsController, type: :controller do
 
     it 'do not allow users to create items with the same reference' do
       sign_in_as(admin)
-      new_item_params = item_params.merge(name: "item name")
-      post :create, params: new_item_params
+      post :create, params: item_params.merge(referencev: "item reference")
       expect(response).to be_successful
-      post :create, params: new_item_params
+      post :create, params: item_params.merge(referencev: "item reference")
       expect(response).to have_http_status(422)
     end
 
