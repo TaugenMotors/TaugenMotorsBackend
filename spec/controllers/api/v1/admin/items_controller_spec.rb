@@ -43,7 +43,7 @@ RSpec.describe Api::V1::Admin::ItemsController, type: :controller do
         tax: Faker::Number.decimal(2, 1),
         description: Faker::Commerce.department,
         provider: Faker::Company.name,
-        status: false
+        status: 'disable'
       }
     }
 
@@ -56,9 +56,9 @@ RSpec.describe Api::V1::Admin::ItemsController, type: :controller do
 
     it 'do not allow users to create items with the same reference' do
       sign_in_as(admin)
-      post :create, params: item_params.merge(referencev: "item reference")
+      post :create, params: item_params.merge(reference: "item reference")
       expect(response).to be_successful
-      post :create, params: item_params.merge(referencev: "item reference")
+      post :create, params: item_params.merge(reference: "item reference")
       expect(response).to have_http_status(422)
     end
 
@@ -76,6 +76,10 @@ RSpec.describe Api::V1::Admin::ItemsController, type: :controller do
       post :create, params: item_params.merge(price: nil)
       expect(response).to have_http_status(422)
       post :create, params: item_params.merge(reference: nil)
+      expect(response).to have_http_status(422)
+      post :create, params: item_params.merge(status: nil)
+      expect(response).to have_http_status(422)
+      post :create, params: item_params.merge(status: 'bad status')
       expect(response).to have_http_status(422)
     end
 

@@ -1,7 +1,9 @@
 class Item < ApplicationRecord
   include ActiveModel::Serializers::JSON
 
-  validates_presence_of :name, :price, :reference
+  enum status: %i[enable disable].freeze
+
+  validates_presence_of :name, :price, :reference, :status
   validates_uniqueness_of :reference
 
   def attributes
@@ -34,7 +36,7 @@ class Item < ApplicationRecord
       key :type, :string
     end
     property :status do
-      key :type, :boolean
+      key :type, :string
     end
   end
 
@@ -65,7 +67,7 @@ class Item < ApplicationRecord
         key :type, :string
       end
       property :status do
-        key :type, :boolean
+        key :type, :string
       end
     end
   end
@@ -91,13 +93,13 @@ class Item < ApplicationRecord
       key :type, :string
     end
     property :status do
-      key :type, :boolean
+      key :type, :string
     end
   end
 
   swagger_schema :Items do
-    key :required, [:Items]
-    property :Items do
+    key :required, [:items]
+    property :items do
       key :type, :array
       items do
         key :type, :object
@@ -124,7 +126,7 @@ class Item < ApplicationRecord
           key :type, :string
         end
         property :status do
-          key :type, :boolean
+          key :type, :string
         end
       end
     end

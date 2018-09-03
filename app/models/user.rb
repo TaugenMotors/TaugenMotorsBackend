@@ -110,8 +110,8 @@ class User < ApplicationRecord
   end
 
   swagger_schema :Users do
-    key :required, [:Users]
-    property :Users do
+    key :required, [:users]
+    property :users do
       key :type, :array
       items do
         key :type, :object

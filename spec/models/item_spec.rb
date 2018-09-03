@@ -14,6 +14,10 @@ RSpec.describe Item, type: :model do
       item = build( :item, reference: nil ).save
       expect( item ).to equal( false )
     end
+    it 'status presence' do
+      item = build( :item, status: nil ).save
+      expect( item ).to equal( false )
+    end
 
     it 'Reference uniqueness' do
       item1 = build( :item, reference: '1234567890' ).save

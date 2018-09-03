@@ -6,6 +6,6 @@ FactoryBot.define do
     tax { Faker::Number.decimal(2, 1) }
     description { Faker::Commerce.department }
     provider { Faker::Company.name }
-    status true
+    status 'enable'
   end
 end

@@ -22,6 +22,8 @@ Rails.application.routes.draw do
         resources :items, only: [:index, :show, :update, :destroy, :create]
         # Catogories
         resources :categories, only: [:index, :show, :update, :destroy, :create]
+        # Terms
+        resources :terms, only: [:index, :show, :update, :destroy, :create]
       end
       # Documentation
       resources :apidocs, only: [:index]

@@ -89,9 +89,11 @@ class Api::V1::ApidocsController < ApplicationController
     Api::V1::Admin::UsersController,
     Api::V1::Admin::ItemsController,
     Api::V1::Admin::CategoriesController,
+    Api::V1::Admin::TermsController,
     User,
     Item,
     Category,
+    Term,
     self,
   ].freeze
 
