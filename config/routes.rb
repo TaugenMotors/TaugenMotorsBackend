@@ -24,6 +24,8 @@ Rails.application.routes.draw do
         resources :categories, only: [:index, :show, :update, :destroy, :create]
         # Terms
         resources :terms, only: [:index, :show, :update, :destroy, :create]
+        # Taxes
+        resources :taxes, only: [:index, :show, :update, :destroy, :create]
       end
       # Documentation
       resources :apidocs, only: [:index]
