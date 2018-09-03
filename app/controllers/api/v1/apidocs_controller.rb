@@ -41,6 +41,20 @@ class Api::V1::ApidocsController < ApplicationController
       key :required, true
       key :type, :string
     end
+    parameter :pathTermId do
+      key :name, :id
+      key :in, :path
+      key :description, 'Term ID'
+      key :required, true
+      key :type, :string
+    end
+    parameter :pathTaxId do
+      key :name, :id
+      key :in, :path
+      key :description, 'Tax ID'
+      key :required, true
+      key :type, :string
+    end
     parameter :csrfToken do
       key :name, 'X-CSRF-TOKEN'
       key :in, :header
@@ -90,10 +104,12 @@ class Api::V1::ApidocsController < ApplicationController
     Api::V1::Admin::ItemsController,
     Api::V1::Admin::CategoriesController,
     Api::V1::Admin::TermsController,
+    Api::V1::Admin::TaxesController,
     User,
     Item,
     Category,
     Term,
+    Tax,
     self,
   ].freeze
 
