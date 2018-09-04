@@ -22,6 +22,7 @@ Rails.application.routes.draw do
         resources :terms, only: [:index, :show, :update, :destroy, :create]
         resources :taxes, only: [:index, :show, :update, :destroy, :create]
         resources :withholdings, only: [:index, :show, :update, :destroy, :create]
+        resources :tariffs, only: [:index, :show, :update, :destroy, :create]
       end
       # Documentation
       resources :apidocs, only: [:index]

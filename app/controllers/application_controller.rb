@@ -36,6 +36,6 @@ class ApplicationController < ActionController::API
 
   # Shared between controllers
   def pagination_params
-    params.permit(:page, :perPage, :role, :search)
+    params.permit(:page, :perPage, :role, :search, :shift)
   end
 end

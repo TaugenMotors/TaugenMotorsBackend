@@ -54,6 +54,13 @@ class Api::V1::ApidocsController < ApplicationController
       key :required, false
       key :type, :string
     end
+    parameter :shift do
+      key :name, :shift
+      key :in, :query
+      key :description, 'Shift name to search for'
+      key :required, false
+      key :type, :string
+    end
     parameter :search do
       key :name, :search
       key :in, :query
@@ -78,12 +85,14 @@ class Api::V1::ApidocsController < ApplicationController
     Api::V1::Admin::TermsController,
     Api::V1::Admin::TaxesController,
     Api::V1::Admin::WithholdingsController,
+    Api::V1::Admin::TariffsController,
     User,
     Item,
     Category,
     Term,
     Tax,
     Withholding,
+    Tariff,
     self,
   ].freeze
 
