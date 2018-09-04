@@ -101,7 +101,7 @@ class Api::V1::Admin::CategoriesController < ApplicationController
 
   # Swagger
   swagger_path '/admin/categories/{id}' do
-    parameter :pathCategoryId
+    parameter :pathId
     operation :get do
       key :description, 'show category'
       key :operationId, 'showCategory'
@@ -129,7 +129,7 @@ class Api::V1::Admin::CategoriesController < ApplicationController
 
   # Swagger
   swagger_path '/admin/categories/{id}' do
-    parameter :pathCategoryId
+    parameter :pathId
     operation :patch do
       key :description, 'Update category'
       key :operationId, 'updateCategory'
@@ -173,7 +173,7 @@ class Api::V1::Admin::CategoriesController < ApplicationController
 
   # Swagger
   swagger_path '/admin/categories/{id}' do
-    parameter :pathCategoryId
+    parameter :pathId
     operation :delete do
       key :description, 'Delete category'
       key :operationId, 'deleteCategory'

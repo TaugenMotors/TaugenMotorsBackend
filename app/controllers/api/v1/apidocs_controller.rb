@@ -20,38 +20,10 @@ class Api::V1::ApidocsController < ApplicationController
     key :produces, ['application/json']
 
     # Reusable parameters
-    parameter :pathUserId do
+    parameter :pathId do
       key :name, :id
       key :in, :path
-      key :description, 'User ID'
-      key :required, true
-      key :type, :string
-    end
-    parameter :pathItemId do
-      key :name, :id
-      key :in, :path
-      key :description, 'Item ID'
-      key :required, true
-      key :type, :string
-    end
-    parameter :pathCategoryId do
-      key :name, :id
-      key :in, :path
-      key :description, 'Category ID'
-      key :required, true
-      key :type, :string
-    end
-    parameter :pathTermId do
-      key :name, :id
-      key :in, :path
-      key :description, 'Term ID'
-      key :required, true
-      key :type, :string
-    end
-    parameter :pathTaxId do
-      key :name, :id
-      key :in, :path
-      key :description, 'Tax ID'
+      key :description, 'ID'
       key :required, true
       key :type, :string
     end
@@ -105,11 +77,13 @@ class Api::V1::ApidocsController < ApplicationController
     Api::V1::Admin::CategoriesController,
     Api::V1::Admin::TermsController,
     Api::V1::Admin::TaxesController,
+    Api::V1::Admin::WithholdingsController,
     User,
     Item,
     Category,
     Term,
     Tax,
+    Withholding,
     self,
   ].freeze
 

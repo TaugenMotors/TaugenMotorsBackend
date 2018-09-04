@@ -1,24 +1,24 @@
-class Api::V1::Admin::TaxesController < ApplicationController
+class Api::V1::Admin::WithholdingsController < ApplicationController
   before_action :authorize_access_request!
-  before_action :set_tax, only: [:show, :update, :destroy]
+  before_action :set_withholding, only: [:show, :update, :destroy]
   VIEW_ROLES = %w[admin owner].freeze
   EDIT_ROLES = %w[admin].freeze
 
   # Swagger
-  swagger_path '/admin/taxes' do
+  swagger_path '/admin/withholdings' do
     operation :get do
-      key :description, 'get taxes'
-      key :operationId, 'getTaxes'
+      key :description, 'get withholdings'
+      key :operationId, 'getWithholdings'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'taxes' ]
+      key :tags, [ 'withholdings' ]
       parameter :csrfToken
       parameter :page
       parameter :perPage
       parameter :search
       response 200 do
-        key :description, 'Taxes'
+        key :description, 'Withholdings'
         schema do
-          key :'$ref', :Taxes
+          key :'$ref', :Withholdings
         end
       end
       response 422 do
@@ -29,45 +29,45 @@ class Api::V1::Admin::TaxesController < ApplicationController
       end
     end
   end
-  # GET /admin/taxes
+  # GET /admin/withholdings
   def index
     page = ( pagination_params[:page] || 1 ).to_i
     perPage = ( pagination_params[:perPage] || 10 ).to_i
-    # Seach all Taxes
-    @taxes = Tax.all.order(:id)
+    # Seach all Withholdings
+    @withholdings = Withholding.all.order(:id)
     # Define total pages with this perPage
-    totalItems = @taxes.length
+    totalItems = @withholdings.length
     if totalItems > 0
       totalPages = ( totalItems / perPage.to_f ).ceil
       page = totalPages >= page ? page : totalPages
       offset = ( page - 1 ) * perPage
-      @taxes = @taxes.limit(perPage).offset(offset)
+      @withholdings = @withholdings.limit(perPage).offset(offset)
     end
 
     response.set_header( 'TOTAL-PAGES', totalPages )
-    render json: @taxes
+    render json: @withholdings
   end
 
   # Swagger
-  swagger_path '/admin/taxes' do
+  swagger_path '/admin/withholdings' do
     operation :post do
-      key :description, 'Creates a new tax. Duplicate names are not allowed'
-      key :operationId, 'addTax'
+      key :description, 'Creates a new withholding. Duplicate names are not allowed'
+      key :operationId, 'addWithholding'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'taxes' ]
+      key :tags, [ 'withholdings' ]
       parameter do
-        key :name, :tax
+        key :name, :withholding
         key :in, :body
-        key :description, 'Tax to add'
+        key :description, 'Withholding to add'
         key :required, true
         schema do
-          key :'$ref', :CreateTax
+          key :'$ref', :CreateWithholding
         end
       end
       response 200 do
-        key :description, 'Created Tax'
+        key :description, 'Created Withholding'
         schema do
-          key :'$ref', :Tax
+          key :'$ref', :Withholding
         end
       end
       response 422 do
@@ -78,14 +78,14 @@ class Api::V1::Admin::TaxesController < ApplicationController
       end
     end
   end
-  # POST /admin/taxes
+  # POST /admin/withholdings
   def create
     begin
-      tax = Tax.new(create_tax_params)
-      if tax.save
-        render json: tax
+      withholding = Withholding.new(create_withholding_params)
+      if withholding.save
+        render json: withholding
       else
-        render json: { error: tax.errors.full_messages.join(' ') },
+        render json: { error: withholding.errors.full_messages.join(' ') },
                status: :unprocessable_entity
       end
     rescue => e
@@ -95,18 +95,18 @@ class Api::V1::Admin::TaxesController < ApplicationController
   end
 
   # Swagger
-  swagger_path '/admin/taxes/{id}' do
+  swagger_path '/admin/withholdings/{id}' do
     parameter :pathId
     operation :get do
-      key :description, 'show tax'
-      key :operationId, 'showTax'
+      key :description, 'show withholding'
+      key :operationId, 'showWithholding'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'taxes' ]
+      key :tags, [ 'withholdings' ]
       parameter :csrfToken
       response 200 do
-        key :description, 'Taxes'
+        key :description, 'Withholdings'
         schema do
-          key :'$ref', :Tax
+          key :'$ref', :Withholding
         end
       end
       response 404 do
@@ -117,33 +117,33 @@ class Api::V1::Admin::TaxesController < ApplicationController
       end
     end
   end
-  # GET /admin/taxes/:id
+  # GET /admin/withholdings/:id
   def show
-    render json: @tax
+    render json: @withholding
   end
 
   # Swagger
-  swagger_path '/admin/taxes/{id}' do
+  swagger_path '/admin/withholdings/{id}' do
     parameter :pathId
     operation :patch do
-      key :description, 'Update tax'
-      key :operationId, 'updateTax'
+      key :description, 'Update withholding'
+      key :operationId, 'updateWithholding'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'taxes' ]
+      key :tags, [ 'withholdings' ]
       parameter :csrfToken
       parameter do
-        key :name, :updateTax
+        key :name, :updateWithholding
         key :in, :body
-        key :description, 'Tax to update'
+        key :description, 'Withholding to update'
         key :required, true
         schema do
-          key :'$ref', :UpdateTax
+          key :'$ref', :UpdateWithholding
         end
       end
       response 200 do
-        key :description, 'Tax to update'
+        key :description, 'Withholding to update'
         schema do
-          key :'$ref', :Tax
+          key :'$ref', :Withholding
         end
       end
       response 404 do
@@ -160,20 +160,20 @@ class Api::V1::Admin::TaxesController < ApplicationController
       end
     end
   end
-  # PATHC /admin/taxes/:id
+  # PATHC /admin/withholdings/:id
   def update
-    @tax.update!(tax_params)
-    render json: @tax
+    @withholding.update!(withholding_params)
+    render json: @withholding
   end
 
   # Swagger
-  swagger_path '/admin/taxes/{id}' do
+  swagger_path '/admin/withholdings/{id}' do
     parameter :pathId
     operation :delete do
-      key :description, 'Delete tax'
-      key :operationId, 'deleteTax'
+      key :description, 'Delete withholding'
+      key :operationId, 'deleteWithholding'
       key :produces, [ 'application/json' ]
-      key :tags, [ 'taxes' ]
+      key :tags, [ 'withholdings' ]
       parameter :csrfToken
       response 200 do
         key :description, :ok
@@ -192,9 +192,9 @@ class Api::V1::Admin::TaxesController < ApplicationController
       end
     end
   end
-  # DELETE /admin/taxes/:id
+  # DELETE /admin/withholdings/:id
   def destroy
-    @tax.destroy
+    @withholding.destroy
     render json: :ok
   end
 
@@ -207,19 +207,19 @@ class Api::V1::Admin::TaxesController < ApplicationController
 
   private
 
-  def set_tax
-    @tax = Tax.find(params[:id])
+  def set_withholding
+    @withholding = Withholding.find(params[:id])
   end
 
   def allowed_aud
     ( ['destroy', 'update', 'create'].include? action_name) ? EDIT_ROLES : VIEW_ROLES
   end
 
-  def tax_params
-    params.require(:tax).permit(:name, :percentage, :description, :tax_type, :status)
+  def withholding_params
+    params.require(:withholding).permit(:name, :percentage, :description, :withholding_type, :status)
   end
 
-  def create_tax_params
-    params.permit(:name, :percentage, :description, :tax_type, :status)
+  def create_withholding_params
+    params.permit(:name, :percentage, :description, :withholding_type, :status)
   end
 end
