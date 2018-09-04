@@ -95,7 +95,7 @@ class Api::V1::Admin::TermsController < ApplicationController
 
   # Swagger
   swagger_path '/admin/terms/{id}' do
-    parameter :pathTermId
+    parameter :pathId
     operation :get do
       key :description, 'show term'
       key :operationId, 'showTerm'
@@ -123,7 +123,7 @@ class Api::V1::Admin::TermsController < ApplicationController
 
   # Swagger
   swagger_path '/admin/terms/{id}' do
-    parameter :pathTermId
+    parameter :pathId
     operation :patch do
       key :description, 'Update term'
       key :operationId, 'updateTerm'
@@ -167,7 +167,7 @@ class Api::V1::Admin::TermsController < ApplicationController
 
   # Swagger
   swagger_path '/admin/terms/{id}' do
-    parameter :pathTermId
+    parameter :pathId
     operation :delete do
       key :description, 'Delete term'
       key :operationId, 'deleteTerm'

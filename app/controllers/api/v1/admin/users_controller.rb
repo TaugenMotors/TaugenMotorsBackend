@@ -61,7 +61,7 @@ class Api::V1::Admin::UsersController < ApplicationController
 
   # Swagger
   swagger_path '/admin/users/{id}' do
-    parameter :pathUserId
+    parameter :pathId
     operation :get do
       key :description, 'show user'
       key :operationId, 'showUser'
@@ -89,7 +89,7 @@ class Api::V1::Admin::UsersController < ApplicationController
 
   # Swagger
   swagger_path '/admin/users/{id}' do
-    parameter :pathUserId
+    parameter :pathId
     operation :patch do
       key :description, 'Update user role'
       key :operationId, 'updateUser'
@@ -138,7 +138,7 @@ class Api::V1::Admin::UsersController < ApplicationController
 
   # Swagger
   swagger_path '/admin/users/{id}' do
-    parameter :pathUserId
+    parameter :pathId
     operation :delete do
       key :description, 'Delete user'
       key :operationId, 'deleteUser'

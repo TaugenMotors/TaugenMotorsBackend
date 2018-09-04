@@ -101,7 +101,7 @@ class Api::V1::Admin::ItemsController < ApplicationController
 
   # Swagger
   swagger_path '/admin/items/{id}' do
-    parameter :pathItemId
+    parameter :pathId
     operation :get do
       key :description, 'show item'
       key :operationId, 'showItem'
@@ -129,7 +129,7 @@ class Api::V1::Admin::ItemsController < ApplicationController
 
   # Swagger
   swagger_path '/admin/items/{id}' do
-    parameter :pathItemId
+    parameter :pathId
     operation :patch do
       key :description, 'Update item'
       key :operationId, 'updateItem'
@@ -173,7 +173,7 @@ class Api::V1::Admin::ItemsController < ApplicationController
 
   # Swagger
   swagger_path '/admin/items/{id}' do
-    parameter :pathItemId
+    parameter :pathId
     operation :delete do
       key :description, 'Delete item'
       key :operationId, 'deleteItem'

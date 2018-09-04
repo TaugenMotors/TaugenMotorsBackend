@@ -16,16 +16,12 @@ Rails.application.routes.draw do
       # Admin
       post 'signup',  to: 'signup#create'
       namespace :admin do
-        # Users
         resources :users, only: [:index, :show, :update, :destroy]
-        # Items
         resources :items, only: [:index, :show, :update, :destroy, :create]
-        # Catogories
         resources :categories, only: [:index, :show, :update, :destroy, :create]
-        # Terms
         resources :terms, only: [:index, :show, :update, :destroy, :create]
-        # Taxes
         resources :taxes, only: [:index, :show, :update, :destroy, :create]
+        resources :withholdings, only: [:index, :show, :update, :destroy, :create]
       end
       # Documentation
       resources :apidocs, only: [:index]

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_03_050513) do
+ActiveRecord::Schema.define(version: 2018_09_04_011416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,10 +26,10 @@ ActiveRecord::Schema.define(version: 2018_09_03_050513) do
     t.string "name", null: false
     t.string "reference", null: false
     t.decimal "price", null: false
-    t.float "tax"
+    t.integer "status", default: 0, null: false
     t.text "description"
     t.string "provider"
-    t.integer "status", default: 0, null: false
+    t.float "tax"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -37,9 +37,9 @@ ActiveRecord::Schema.define(version: 2018_09_03_050513) do
   create_table "taxes", force: :cascade do |t|
     t.string "name", null: false
     t.decimal "percentage", null: false
-    t.text "description"
     t.string "tax_type", null: false
     t.integer "status", default: 0, null: false
+    t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -63,6 +63,16 @@ ActiveRecord::Schema.define(version: 2018_09_03_050513) do
     t.string "name", null: false
     t.string "telephone", null: false
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token"
+  end
+
+  create_table "withholdings", force: :cascade do |t|
+    t.string "name", null: false
+    t.decimal "percentage", null: false
+    t.string "withholding_type", null: false
+    t.integer "status", default: 0, null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
